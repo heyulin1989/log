@@ -1,0 +1,278 @@
+* 之前的内容
+1. 将detector_plate.py、detector_ssd.py拷贝进mxnet根目录/detect/目录下
+2. batch_recognize.py：框出图片中车牌的位置，并识别出车牌内容。
+   执行参数：python batch_recognize.py --prefix /var/service/mxnet-ssd/mxnet-ssd/model/ssd1 --epoch 220 --thresh 0.2 --nms 0.01 --images 图片目录
+3. batch_ssd.py：只框出图片中车牌的位置，并且车牌不进行筛选。
+   执行参数：python batch_ssd.py --prefix /var/service/mxnet-ssd/mxnet-ssd/model/ssd1 --epoch 220 --thresh 0.2 --nms 0.01 --images 图片目录
+
+
+opt : 12G
+/home/heyulin: 20G
+/usr    : 9G
+
+total : 41G
+
+labelimg: 改进方法
+对应车牌，只需点击对角两点，即可
+
+
+
+2017/10/21
+2017/10/22:
+chinese english :
+深瞐：
+    先线程再join
+
+2017/10/23
+
+fix mail : take a long time
+
+2017/10/24
+
+
+kafka streaming格式
+
+json 得到对应的数据的数量
+
+size_t json_serialization_size(const JSON_Value *value);   // 得到对应的json个数，用于分配buffer的长度
+JSON_Status json_serialize_to_buffer(
+			const JSON_Value *value,
+			char *buf,
+			size_t buf_size_in_bytes);  // json
+
+// 是将value copy一份加入其中还是直接将value指针对应的值加入其中，如果是值则不需要free
+// 如果copy则需要将value对应的值free
+// 从源代码上来看,是直接将value加入其中，不需要free
+
+JSON_Status json_object_set_value(JSON_Object *object, const char *name, JSON_Value *value);
+
+JSON_Status json_object_set_string(JSON_Object *object, const char *name, const char *string);
+
+// 初始化一些对应的json接口
+JSON_Value * json_value_init_object (void);
+JSON_Value * json_value_init_array  (void);
+
+// 这
+void         json_value_free        (JSON_Value *value);
+
+深瞐
+
+  "Name": "丰田-埃尔法-2015",
+  VehicleBrand:      丰田
+  VehicleModel:     埃尔法-2015
+  VehicleClass: 这个是用中文还是自己有定义的车辆号码
+
+
+std::string clear()
+
+
+
+kafka consumer  :     conf 不设置
+	                  conf_set 设置
+					  >					  
+* <2017-11-14 二>
+** 整理深瞐用于演示的代码说明
+*** 代码整体结构
+**** java调用命令，生成需要的图片
+**** 命令部分
+***** 处理流程
+	 1. sh对于参数进行处理
+	 2. 调用深瞐的c接口生成对应的json
+	 3. 再用python工具解析json,绘制出需要的图片
+***** 安装说明
+	 1. 下载freetype-py-1.1
+     2. 进行目录,运行python setup.py
+	 3. 下载深瞐解析的用于演示的c代码部分
+	 4. 下载shenmo_show,shen_mo_draw_object.py,chinese_font.py
+     5. 修改shenmo_show中shenmo_linux_show对应的路径
+     6. 修改shenmo_show中shen_mo_draw_object.py对应的路径
+***** 使用说明
+     shenmo_show input_diretory ouput_directory log_directory	 
+***** 下载路径
+	 freetype-py-1.1对应的内部下载路径:
+          //10.30.26.173/sharpath/modules/shenmo_show_20171114/freetype-py-1.1
+	 深瞐解析的用于演示的c代码部分: 
+          https://10.30.22.165:8801/svn/vocean/trunk/shark/viss-cardetection/c_plus_plus
+     shenmo_show,shen_mo_draw_object.py,chinese_font.py代码路径:
+          https://10.30.22.165:8801/svn/vocean/trunk/vicuna/deeplearning/licenseplate/python_tools/shenmo_show
+***** 生成效果
+     	  
+** 深瞐非kafka版本的代码说明
+*** 安装说明
+	下载深瞐解析代码
+    安装参考readme.txt
+*** 使用说明
+	shenmo_linux_business:
+    -f (输入的需要转化的json文件名称) type: string default: ""
+    -l (日志文件输出（统计耗时信息：解析json文件耗时，读取图片文件数量及耗时，深瞐检测的耗时）)
+       type: string default: "./"
+    -o (检测结果输出的文件夹名称) type: string default: ""
+*** 下载路径
+	svn路径:
+	https://10.30.22.165:8801/svn/vocean/trunk/shark/viss-cardetection/c_plus_plus
+
+** 深瞐kafka版本的代码说明
+*** 安装说明
+	下载深瞐解析代码
+    安装参考readme.txt
+*** 使用说明
+	shenmo_linux_kafka:
+	-l (日志文件输出（统计耗时信息：解析json文件耗时，读取图片文件数量及耗时，深瞐检测的耗时）)
+      type: string default: "./"
+    -thread_num (开启的线程数量) type: int32 default: 1
+*** 下载路径
+	svn路径:
+	https://10.30.22.165:8801/svn/vocean/trunk/shark/viss-cardetection/c_plus_plus
+
+* <2017-11-15 三>
+** 作业
+   CLOCK: [2017-11-15 三 20:06]--[2017-11-15 三 20:06] =>  0:00
+  + [-] 任务 [66%]
+	+ [X] 在wiki上标注表示矩形框的意义
+	+ [X] 从深瞐的生成的json中提取坐标,坐标包含车牌，车，人物，小物品  <2017-11-15 三>  添加时间秒
+	+ [-] 图片颜色分类 [50%]
+	  + [X] 将图片按照12种颜色类型分类,使用split_color.sh脚本
+		1. 左上角的X轴坐标
+		2. 左上角的Y轴坐标
+		3. 右下角的X轴坐标
+		4. 右下角的Y轴坐标
+      + [-] 选择图片 [25%]
+		+ [ ] 黑色
+		+ [X] 白色
+		+ [ ] 银色
+		+ [ ] 灰色
+		+ [X] 红色
+		  
+** 总结
+   灯对于图片颜色的影响
+   周边的环境对应的车颜色的影响
+* <2017-11-16 四>.
+  + [-] 任务 [0%]
+	+ [-] 图片颜色分类 [0%]
+      + [-] 选择图片 [37%]
+		+ [ ] 黑色 5800
+		+ [X] 白色 16600
+		+ [ ] 深灰色 3000
+		+ [X] 灰色 5500
+		+ [ ] 绿色 1700
+		+ [ ] 蓝色 4300
+		+ [ ] 棕色
+		+ [X] 红色 4000 2800
+   深瞐服务器  :  10.30.23.202   -auth_type=2 -auth_server=10.30.23.202:12821
+
+* <2017-11-17 五>
+  + [-] task [50%]
+    + [X] 黑色 5800
+    + [X] 白色 16600
+    + [ ] 深灰色 3000
+    + [X] 灰色 5500
+    + [ ] 绿色 1700
+    + [ ] 蓝色 4300
+    + [ ] 棕色
+    + [X] 红色 4000 2800
+	  
+* <2017-11-20 一>
+  + [-] task [87%]
+    + [X] 黑色 5800
+    + [X] 白色 16600
+    + [X] 深灰色 3000
+    + [ ] 灰色 5500
+    + [X] 绿色 1700 186
+    + [X] 蓝色 4300 667
+    + [X] 棕色
+    + [X] 红色 4000 2800
+  
+** 深瞐的打包环境
+   现在只是一个环境没有readme
+   环境路径: /home/data/he/shen_mo/business_tmp1/
+   libgomp    => openmp 使用
+   kafka的配置在配置文件中
+* <2017-11-21 二>
+  + [X] task [100%]
+    + [X] 黑色 5800
+    + [X] 白色 16600
+    + [X] 深灰色 3000
+    + [X] 灰色 5500
+    + [X] 绿色 1700 186
+    + [X] 蓝色 4300 667
+    + [X] 棕色
+    + [X] 红色 4000 2800
+** 打包深瞐的库，使得直接运行到docker下  
+   需要libgomp.so 
+   配置文件读取使用
+   kafka配置
+   配置文件需要
+   命令的参数也需要
+   -producer_addr=""
+   -producer_topic=""
+   -consumer_addr=""
+   -consumer_topic=""
+   c++按行读取
+* <2017-11-22 三>
+  + [-] task [66%]
+	+ [X] 程序命令行控制kafka的参数
+	+ [ ] 体检报名
+	+ [X] 黄波报告--大规模日志系统设计
+	+ [ ] 
+** 瑞慈体检
+   体检地址：上海市浦东新区张江高科技园区张东路1388号15号楼
+   机构电话：021-68795566、021-68795757-8000
+   线路：地铁2号线广兰路站4号口，换张江有轨电车至终点站张东路；公交：989、东川专线、张江环线
+   时间:  2017-12-04 07:30:00-08:00:00
+** 线程写安全文件流
+   静态类成员
+* <2017-11-23 四>
+** 守护进程  
+   + [-] 任务 [80%] 
+	 + [ ]  设置2m  任务执行3m  执行完一个任务之后是否再执行这个任务 ？？ 
+	 + [X]  将所有的配置文件移动到一个文件夹中
+	 + [X]  深瞐网络配置写在配置中  
+	 + [X]  日志加时间
+	 + [X]  添加日志的级别控制 命令行参数
+
+   LOG(log_mgr::ERROR) << 
+   LOG(log_mgr::ERROR) << errstr << LOG_END;
+   LOG(log_mgr::WORNNING) << 
+   LOG(log_mgr::DEBUG) << 
+* <2017-11-24 五>
+  
+** learn
+   __TIME__和__DATE__:编译时的时间和日期
+   stringstream >> string: stringstream的内容之间不能有空格
+   不然就会将第一个空格之后的内容写到string中
+   kafka 输出
+* <2017-11-27 一>
+  + [ ] task [%]
+	+ [ ] resnext 18层网络
+** 总结
+   / %  :  这个使用register和不使用时间一样
+   + - * & ^ | : 使用register和不使用速度相差10倍，不使用register是要慢50%
+   find 不能直接使用软连接查找
+   im2rec.py 使用生成list
+   python /var/service/mxnet/tools/im2rec.py --list True --shuffle True --train-ratio 0.80 --resize 32 --recursive True train train
+   生成rec:
+   python /var/service/mxnet/tools/im2rec.py val val
+   训练:
+   python train_imagenet.py --data-val="./val.rec" --data-train="./train.rec" --model-prefix="./model/aaaa" --gpus=0  --image-shape="3,24,24" --num-layers=14 --num-epochs=10
+   
+* <2017-11-28 二>
+* <2017-11-29 三>
+  军牌挑选
+** 将所有图片缩放到45*120
+   /home/data/he/test_plates_color/image-classification/
+   python /var/service/mxnet/tools/im2rec.py train2_val train2
+   python /var/service/mxnet/tools/im2rec.py train2_train train2
+   python train_imagenet.py --data-val="./train2_val.rec" --data-train="./train2_train.rec" --model-prefix="./model/aaaa" --gpus=0  --image-shape="3,24,24" --num-layers=14 --num-epochs=10
+* <2017-11-30 四>
+  查看图片信息的命令
+  将所有图片去除重复的
+  将没有车牌的图片添加车牌
+  #+begin_src sh
+  #+end_src
+  #+RESULTS:
+  去除某列重复的行
+  去除第一列和第二列重复的行:
+  awk '!a[$1""$2]++{print}'
+  
+  能否软链接所有的图片
+  org-mode 表格操作
