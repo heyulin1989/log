@@ -1,0 +1,132 @@
+* <2017-12-01 五>
+  resnext.py : 生成的模型不能使用
+  预测时的probs全部没有波动
+  添加HostName字段
+* <2017-12-04 一>
+  + [ ] task [0%]
+	+ [ ] kafka的python接口 [0%]
+	  + [ ] consumer接口
+	  + [ ] producer接口
+	  + [ ] 解析consumer接口的信息
+	  + [ ] 产生写入kafka的信息
+	+ [ ] mxnet生成json格式定义
+记录日志  
+* <2017-12-04 一>
+  + [ ] task [0%]
+	+ [ ] kafka的python接口 [0%]
+	  + [ ] consumer接口
+	  + [ ] producer接口
+	  + [ ] 解析consumer接口的信息
+	  + [ ] 产生写入kafka的信息
+	+ [ ] mxnet生成json格式定义
+记录日志  
+* <2017-12-07 四>
+  车牌识别
+  多个结果需要一个
+  如果图片坏了，mxnet识别的不出是否会终止
+  
+  测试的topic
+  name:   test-mxnet
+  partitions: 8个
+  
+** 查看kafka中的topic信息
+   JMX_PORT=9778 bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 10.30.26.160:9092 --topic test-mxnet
+* <2017-12-08 五>
+** 查看kafka下consumer中对应的所有的所有group  
+   JMX_PORT=9778 bin/kafka-consumer-groups.sh --bootstrap-server 10.30.26.160:9092 --new-consumer --list
+** 
+
+#+begin_src C
+
+typedef struct {
+   int i[10];
+   int num;
+}arr;
+void main(){
+   arr a={
+     {1,2,3,4,5,6,7,8,9,10},10
+   };
+   arr b;
+   b = a;
+   printf("%d\n", b.i[5]);
+}
+#+end_src
+
+#+RESULTS:
+   
+* <2017-12-11 一>
+* <2017-12-13 三>
+  + [-] task [66%]
+    + [X] 坏图片
+    + [X] 多线程
+    + [ ] 深瞐和mxnet性能对比
+* <2017-12-14 四>
+** 测试深瞐的速度
+   数据: 从/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/picdata1/org_big_pic
+      随机选出10000张图片至/home/data/he/test_shenmo_mxnet_speed_data
+	  输出结果至/home/data/he/test_shenmo_result
+   命令 :
+	     cd /root/gpu_core_2.1.5.3_publish_old/bin
+	     ./demo_linux_threads -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result -thread_num=4 -auth_type=1
+	     ./demo_linux_threads -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result -thread_num=4 -auth_server=10.30.23.51:12821
+   
+   结果:
+   total time: 175.87s  total image: 10000   average time: 17.587ms
+   2017年 12月 14日 星期四 10:44:40 CST
+** 函数式编程特点
+   高阶函数
+   偏应用函数
+   柯里化
+   闭包
+   各个独立的部分的执行顺序可以随意打乱
+* <2017-12-15 五>
+  + [X] task [100%]
+	+ [X] 将python-mxnet的源码上传
+	+ [X] 测试深瞐的cpu使用率
+	  [[file:/home/heyulin/shenmo_4_cpu 2017-12-15 18-10-23.png]]
+	  [[file:/home/heyulin/shenmo_1_cpu 2017-12-15 18-11-38.png]]
+	  单线程100%左右
+      4线程260%左右
+	  图片显示: C-c C-x C-v
+	  如何控制图片大小显示: 
+	  图片排版
+** c++
+   g++5.4不支持模型定义和实现的分离，不支持export关键字
+* <2017-12-18 一>
+  需要的图片格式
+  使用cv2.imdecode函数速度为86s/10000
+  87s:
+    imread()
+	transpose()
+  87s:
+    imread()
+  深瞐c++读图片:  16s~17s/1000 160s~170s/10000
+  c++读取图片的速度比python慢 ??
+  
+* <2017-12-19 二>
+  valgrind.org
+  install:
+   git clone git://sourceware.org/git/valgrind.git
+* <2017-12-20 三>
+  晋K37538
+* <2017-12-21 四>
+  null.jpg: 这张图片可以尽量少
+  
+* <2017-12-25 一>
+  1. 将深瞐和mxnet的调用参数统一, 全部修改为-
+  2. 将选择的图片打包上传到173上 all_type_checked_pic.tar.gz
+  bash 开进程 { }&
+  split -l number file : 将一个文件分切为行数为number的文件名字按照x[a-z][a-z]
+  for ;do something;done
+
+* <2017-12-26 二>
+  学 皖 苏 南
+* <2017-12-29 五>
+** 张家界-深瞐 net 
+   ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/20171124/t43080200001210002664/3/2 -output_dir=/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/20171124/t43080200001210002664/3/2_shenmo
+   unInitialize SDK: 0
+   total time: 136.463s  total image: 1232   average time: 110.766ms
+   2017年 12月 29日 星期五 11:28:20 CST
+
+* <2018-01-02 二> 
+   /home/data/mobile_hard_disk_bak/tmp/machine_learning_database/PKU_vehicle_dataset/images:
