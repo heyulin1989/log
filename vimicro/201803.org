@@ -1,0 +1,459 @@
+* <2018-03-01 四>
+   10帧 huancun 
+   16G 8lu 一张card 1080p
+   每一路都要配置
+   80% cpu>=2.4GH
+   ubuntu 
+* <2018-03-02 五>
+  筛选数据（打电话，安全带）
+  处理数据名字
+* <2018-03-05 一>
+  整理卓视文档,将代码中识别出的信息属性整理，添加到卓视文档中，并整理卓视文档
+* <2018-03-06 二>
+ 卓视输出结果的问题
+
+
+    VE_ObjectList,VE_Object,VE_ObjectInfo 
+	各有一个时间戳，这些时间是什么时间？ 绝对时间？ 还是什么其他时间？
+
+    VE_VehicleInfo中
+	veu16		nVehicleFeatureNum;				//特征维度//
+	vef32		fVehicleCarFeature[4096];		//车辆子图像特征//
+	vef32		fVehicleImgFeature[4096];		//挡风玻璃子特征//
+    这三个都什么含义，有什么功能？
+
+    各类位置： 位置是用像素坐标表示？还是别的表示方式？
+    
+    颜色，车辆都是用一个数组再加一个索引，这个设计有什么好处？为什么不用一个整形
+    外加一个枚举，这些内存可以不占用？
+
+    VE_VehicleInfo中
+         ves8		cVehicleColorDarkOrLight[10];	//车辆深浅色//
+    这个深浅色，用10个元素的数组是含义，是每个含有的元素代表一个深浅值，还是？
+
+
+
+
+  所有的co增扩10倍 水平翻转 高斯模糊 前后随机倾斜角度 随机裁剪图片 上下的倾斜一点点 
+  call 10倍
+  codriver 2 
+  belt 1
+    
+* <2018-03-07 三>
+  （multilayer perceptron (MLP) ）或者叫多层神经网络
+   对图片进行增扩
+  
+* <2018-03-08 四>
+   一个量, 在不同的参考系下按照某种特定的法则进行变换, 就是张量
+   A tensor is something that transforms like a tensor!
+   将shenmo的授权提到命令行中
+   配置文件的路径将修改为
+   路径相对，配置文件中
+   解决深瞐中ip错误问题
+   
+   配合华为搭建智能识别环境，解决深瞐中不能手动设置ip问题
+* <2018-03-09 五>
+  配合华为搭建智能识别环境, mxnet中kafka不能连接问题
+  当初始化一个程序时需要将信息打印出来
+  41：50
+
+* <2018-03-12 一>
+
+  面试主要是分析问题和解决问题的能力
+  
+  c 试题 主要内存和指针的使用
+  在little endian and big endian两种情况下
+  只在下
+  char add(unsigned short a, unsigned char b){
+  return a + b;
+  }
+  int main(){
+  int a = 0x87654321;
+  int b = 0x89abcdef;
+  printf("%c\n", add(a, b)+0x51);
+  }
+  
+  // 交换不使用其他变量
+  bool swap(int* a, int *b){
+  if ((NULL == a) || (NULL == b)){return false;}
+  *a = *a + *b;
+  *b = *a - *b;
+  *a = *a - *b;
+  return true;
+  }
+  int swap(int& a, int& b){
+  a = a + b;
+  b = a - b;
+  a = a - b;
+  }
+  这样做会出现什么问题？
+  如果a+b之和大于0x7fffffff,那么出现溢出
+
+  // 宏定义的问题
+  #define ADD(a, b)  a+b
+  
+  void main(){
+  int a = 10;
+  int b = 20;
+  printf("%d\n", ADD(a,b)*ADD(b, a));
+  }
+  
+  // static问题
+  
+  // 结构体的问题
+  1. 
+  typedef struct{
+  int a;
+  union{
+  int a;
+  short b;
+  char c;
+  }c;
+  int b;
+  }name;
+  printf("%d\n", sizeof(name));
+
+  12
+
+  2. 
+  typedef union{
+  int a;
+  struct{char a; char b; char c; char d;}p;
+  }addr;
+
+  void main(){
+  addr p;
+  p.a = 0x0102a8c0;
+  printf("%d.%d.%d.%d\n",p.p.a,p.p.b,p.p.c,p.p.d);
+  }
+  192.168.2.1
+
+  // 指针
+  定义一个函数
+  返回值是一个指向一个无返回值有一个int型参数的函数指针
+  参数有二个
+  一个整型
+  一个指向一个无返回值有一个int型参数的函数指针
+
+  // 数学
+  // 如果给一个101个元素的数组，存储的数是1-100其中有一个重复，如何找出其中重复的
+  int get_repeat(int arr[], int len){
+  
+  }
+  // byte操作
+  // 如果有都是成对出现的，如何找出其中一个不重复的
+  int get_no_repeat(int arr[], int len){
+  
+  }
+  
+  c++ 面向对象的思想 简单的实现
+  // 类的问题
+  面向对象的三大特点
+  
+* <2018-03-15 四>
+  电话面试南京CPP工程师
+  电话面试很多
+* <2018-03-16 五>
+  配合成都测试
+  将卓视的文档修改为markdown格式
+* <2018-03-19 一>
+  将卓视的文档修改为markdown格式
+  docker安装使用 
+  测试环境
+  1个docker下的双显卡，出现网络延时
+  
+* <2018-03-20 二>
+
+  测试docker
+  gpu 1    docker 1       33-34 ms   cpu: 250 %
+  gpu 2    docker 2       21 ms
+  gpu 1    docker 2       61 ms / 2
+  gpu 2    docker 1       25 ms 
+  
+* <2018-03-21 三>
+  详细测试物理机上mxnet的性能，单个，双个gpu,送入不同张数时的性能
+  gpu 1   cpu 8
+      cpu top: 624%  
+      total_time:  163423.695 ms  
+	  picture sum:  9000
+      average_time:  18.158 ms
+	  每次送1000张
+	  
+	  cpu : 640%
+	  total_time:  164472.096 ms
+	  picture sum:  9000
+	  average_time:  18.274 ms
+	  每次送900张
+	  total_time:  165100.015 ms
+	  picture sum:  9000
+	  average_time:  18.344 ms
+	  每次送900张
+
+	  cpu top: 630%
+	  total_time:  156765.563 ms
+	  picture sum:  9000
+	  average_time:  17.418 ms
+	  每次送800张
+	  total_time:  157381.301 ms
+	  picture sum:  9000
+	  average_time:  17.486 ms
+	  每次送800张
+	  total_time:  160604.399 ms
+	  picture sum:  9000
+	  average_time:  17.844 ms
+	  每次送800张
+
+	  cpu : 630%
+	  total_time:  155299.706 ms
+	  picture sum:  9000
+	  average_time:  17.255 ms
+	  每次送700张
+	  total_time:  153461.093 ms
+	  picture sum:  9000
+	  average_time:  17.051 ms
+	  每次送700张
+	  total_time:  157112.757 ms
+	  picture sum:  9000
+	  average_time:  17.456 ms
+	  每次送700张
+
+	  cpu : 620%
+	  total_time:  167701.828 ms
+	  picture sum:  9000
+	  average_time:  18.633 ms
+	  每次送600张
+	  total_time:  166015.822 ms
+	  picture sum:  9000
+	  average_time:  18.446 ms
+	  每次送600张
+	  total_time:  165474.464 ms
+	  picture sum:  9000
+	  average_time:  18.386 ms
+	  每次送600张
+
+	  
+	  cpu : 600% 
+	  total_time:  165731.79 ms
+	  picture sum:  9000
+	  average_time:  18.414 ms
+	  每次送500张
+	  total_time:  169647.115 ms
+	  picture sum:  9000
+	  average_time:  18.849 ms
+	  每次送500张
+
+	  cpu : 410%
+	  total_time:  174681.423 ms
+	  picture sum:  9000
+	  average_time:  19.409 ms
+	  每次送300张
+
+	  cpu : 410%
+	  total_time:  175527.13 ms
+	  picture sum:  9000
+	  average_time:  19.503 ms
+	  每次送300张
+
+
+	  cpu : 370%
+	  total_time:  86986.245 ms
+	  picture sum:  4000
+	  average_time:  21.746 ms
+	  每次送100张
+
+
+	  cpu: 260%
+	  total_time:  33122.971 ms  
+	  picture sum:  1000
+	  average_time:  33.122 ms
+	  每次送30张
+
+	  cpu: 123%
+	  total_time:  333694.929 ms
+	  picture sum:  1000
+	  average_time:  333.694 ms
+	  每次送1张
+
+
+  gpu 0,1 cpu 8 
+      cpu top: 624%  gpu : 89%-93%
+      total_time:  119619.782 ms  
+	  picture sum:  9000
+      average_time:  13.291 ms
+	  每次送1000张
+	  total_time:  114856.132 ms
+	  picture sum:  9000
+	  average_time:  12.761 ms
+	  每次送1000张
+
+	  cpu : 660%
+	  total_time:  115235.433 ms
+	  picture sum:  9000
+	  average_time:  12.803 ms
+	  每次送900张
+	  total_time:  115277.469 ms
+	  picture sum:  9000
+	  average_time:  12.808 ms
+	  每次送900张
+	  total_time:  115966.156 ms
+	  picture sum:  9000
+	  average_time:  12.885 ms
+	  每次送900张
+
+	  cpu : 660%
+	  total_time:  112969.976 ms
+	  picture sum:  9000
+	  average_time:  12.552 m
+	  每次送800张
+	  total_time:  113045.551 ms
+	  picture sum:  9000
+	  average_time:  12.56 ms
+	  每次送800张
+	  total_time:  113812.047 ms
+	  picture sum:  9000
+	  average_time:  12.645 ms
+	  每次送800张
+	  
+	  cpu : 660%
+	  total_time:  107745.364 ms
+	  picture sum:  9000
+	  average_time:  11.971 ms
+	  每次送700张
+	  total_time:  110419.802 ms
+	  picture sum:  9000
+	  average_time:  12.268 ms
+	  每次送700张
+	  total_time:  109963.876 ms
+	  picture sum:  9000
+	  average_time:  12.218 ms
+	  每次送700张
+	  
+	  cpu : 650%
+	  total_time:  124888.188 ms
+	  picture sum:  9000
+	  average_time:  13.876 ms
+	  每次送600张
+	  total_time:  117674.758 ms
+	  picture sum:  9000
+	  average_time:  13.074 ms
+	  每次送600张
+	  total_time:  119028.609 ms
+	  picture sum:  9000
+	  average_time:  13.225 ms
+	  每次送600张
+	  
+	  cpu : 640%
+	  total_time:  118734.258 ms
+	  picture sum:  9000
+	  average_time:  13.192 ms
+	  每次送500张
+	  total_time:  117944.033 ms
+	  picture sum:  9000
+	  average_time:  13.104 ms
+	  每次送500张
+	  total_time:  118272.498 ms
+	  picture sum:  9000
+	  average_time:  13.141 ms
+	  每次送500张
+	  
+	  
+	  cpu : 560%
+	  total_time:  121681.773 ms
+	  picture sum:  9000
+	  average_time:  13.52 ms
+	  每次送300张	  
+	  total_time:  121039.404 ms
+	  picture sum:  9000
+	  average_time:  13.448 ms
+	  每次送300张	  
+	  
+	  cpu : 560%
+	  total_time:  122018.227 ms
+	  picture sum:  9000
+	  average_time:  13.557 ms
+	  每次送100张	  
+	  total_time:  122676.503 ms
+	  picture sum:  9000
+	  average_time:  13.63 ms
+	  每次送100张	     
+	  
+	  cpu : 360%
+	  total_time:  224905.2 ms
+	  picture sum:  9000
+	  average_time:  24.989 ms
+	  每次送30张	  
+
+	  cpu : 
+	  每次送1张	
+* <2018-03-22 四>
+  docker数据
+* <2018-03-23 五>
+  python isinstance()函数
+    type() 不会认为子类是一种父类类型，不考虑继承关系。
+    isinstance() 会认为子类是一种父类类型，考虑继承关系。
+* <2018-03-26 一>
+  
+
+  这周的任务
+  电话面试的
+  许可
+  丁红娟
+
+  工具路径：
+  /home/data/fw/tools/src
+  convert: 转换
+      gen_lst.py : xml转化为lst， 目录指定写成命令行参数
+	  itez_to_ssd_plate.py : 和itez扣出来的车牌进行比较
+	  lst_to_vocxml.py : 从lst生成xml
+	  shenmo_to_vocxml.py : 深目的json->xml
+  cut_rect:  扣图片
+      get_vehicleimg_by_rest.py : 从程序生成的txt读取信息扣图片
+	  img_rect.py : 扣图片并放大
+	  img_tool.py : 扣图片
+  match : 在大图片中找到小图片位置
+      smallPic_match_igPic_rect.py : 大图片配置小图片生成txt文档
+	  match_pic.py : 核心算法
+  org_data_arrange : 原始数据整理
+  pic_process : 将小图片贴到大图片中
+      gen_modelled_pic.py : 贴图片，不能重叠这里有个算法控制
+  show : 解析json文件，并将信息画在图片上，显示图片
+         生成rec之前的lst,可以直接show出来
+      show_img_lst.py : 从lst图片的
+	  
+  xml_related : java
+      SmallPic_for_labelImg_xml.java : 小车牌放大之后标记，然后再缩小为原图片
+	  XML_add_object.java : 合并xml, 在xml中添加属性
+	  XML_self_arrange.java : 在修改xml属性nocall no
+
+	  
+	  DataCollecter.java : 模型生成txt和人工标记的xml进行对比，得到模型的准确率 以bench_data为基准 actual_data为模型生成的
+	  Count*.java : 所有计算包括车辆，车牌，司机安全带的个数， 打电话的个数 打电话中判断是对的个数
+      
+  xml -> lst -> rec     
+  xml : 标记图片的xml (labelme为准) 
+  xml->lst : 使用gen_lst.py生成
+  lst -> rec : python im2rec.py  .lst   dir   --shuffle Ture --pack-label "1"  其中dir为lst中的图片所在目录 im2rec.py在mxnet/tools下
+ 
+  python train.py --prefix ./  --batch-size --num-example 1000 --lr 0.0001 --pretrained "" --network
+
+
+
+
+  zhangjiajie/txt
+
+  mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/zhangjiajie/txt/
+  这里是生成的txt，生成txt的代码在 vehicl
+  big-pic_1920x1080_vehicle_recognize_2.1.txt
+  big-pic_1920x1080_vehicle_recognize_3.0.txt
+  big-pic_3408x2008_vehicle_recognize_2.1.txt
+  
+  t430822000160-1920x1080-20171225-22a7b154f0fb11e7bb642c4d54f11855_b1920_1080	1008,324,1105,353_plate_蓝~黑G9A771_0.44374	852,49,1223,398_car_金杯-厦门金龙~海狮（金杯）-海狮（厦门金龙）~2010~轿车~黑色_0.995215
+
+
+  1008,324,1105,353_plate_蓝~黑G9A771_0.44374   : 
+* <2018-03-29 四>
+  接手在使用mxnet中处理图片的一些工具
+  接手陈春雁关于caffe工作
+  接手陈春雁关于在线标注工具的工作
+  接手有关mxnet图片识别的代码
+  接手有关mxnet图片识别的代码

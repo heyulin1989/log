@@ -1,0 +1,345 @@
+* <2017-12-01 五>
+  resnext.py : 生成的模型不能使用
+  预测时的probs全部没有波动
+  添加HostName字段
+* <2017-12-04 一>
+  + [ ] task [0%]
+	+ [ ] kafka的python接口 [0%]
+	  + [ ] consumer接口
+	  + [ ] producer接口
+	  + [ ] 解析consumer接口的信息
+	  + [ ] 产生写入kafka的信息
+	+ [ ] mxnet生成json格式定义
+记录日志  
+* <2017-12-04 一>
+  + [ ] task [0%]
+	+ [ ] kafka的python接口 [0%]
+	  + [ ] consumer接口
+	  + [ ] producer接口
+	  + [ ] 解析consumer接口的信息
+	  + [ ] 产生写入kafka的信息
+	+ [ ] mxnet生成json格式定义
+记录日志  
+* <2017-12-07 四>
+  车牌识别
+  多个结果需要一个
+  如果图片坏了，mxnet识别的不出是否会终止
+  
+  测试的topic
+  name:   test-mxnet
+  partitions: 8个
+  
+** 查看kafka中的topic信息
+   JMX_PORT=9778 bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 10.30.26.160:9092 --topic test-mxnet
+* <2017-12-08 五>
+** 查看kafka下consumer中对应的所有的所有group  
+   JMX_PORT=9778 bin/kafka-consumer-groups.sh --bootstrap-server 10.30.26.160:9092 --new-consumer --list
+** 
+
+#+begin_src C
+
+typedef struct {
+   int i[10];
+   int num;
+}arr;
+void main(){
+   arr a={
+     {1,2,3,4,5,6,7,8,9,10},10
+   };
+   arr b;
+   b = a;
+   printf("%d\n", b.i[5]);
+}
+#+end_src
+
+#+RESULTS:
+   
+* <2017-12-11 一>
+* <2017-12-13 三>
+  + [-] task [66%]
+    + [X] 坏图片
+    + [X] 多线程
+    + [ ] 深瞐和mxnet性能对比
+* <2017-12-14 四>
+** 测试深瞐的速度
+   数据: 从/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/picdata1/org_big_pic
+      随机选出10000张图片至/home/data/he/test_shenmo_mxnet_speed_data
+	  输出结果至/home/data/he/test_shenmo_result
+   命令 :
+	     cd /root/gpu_core_2.1.5.3_publish_old/bin
+	     ./demo_linux_threads -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result -thread_num=4 -auth_type=1
+	     ./demo_linux_threads -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result -thread_num=4 -auth_server=10.30.23.51:12821
+   
+   结果:
+   total time: 175.87s  total image: 10000   average time: 17.587ms
+   2017年 12月 14日 星期四 10:44:40 CST
+** 函数式编程特点
+   高阶函数
+   偏应用函数
+   柯里化
+   闭包
+   各个独立的部分的执行顺序可以随意打乱
+* <2017-12-15 五>
+  + [X] task [100%]
+	+ [X] 将python-mxnet的源码上传
+	+ [X] 测试深瞐的cpu使用率
+	  [[file:/home/heyulin/shenmo_4_cpu 2017-12-15 18-10-23.png]]
+	  [[file:/home/heyulin/shenmo_1_cpu 2017-12-15 18-11-38.png]]
+	  单线程100%左右
+      4线程260%左右
+	  图片显示: C-c C-x C-v
+	  如何控制图片大小显示: 
+	  图片排版
+** c++
+   g++5.4不支持模型定义和实现的分离，不支持export关键字
+* <2017-12-18 一>
+  需要的图片格式
+  使用cv2.imdecode函数速度为86s/10000
+  87s:
+    imread()
+	transpose()
+  87s:
+    imread()
+  深瞐c++读图片:  16s~17s/1000 160s~170s/10000
+  c++读取图片的速度比python慢 ??
+  
+* <2017-12-19 二>
+  valgrind.org
+  install:
+   git clone git://sourceware.org/git/valgrind.git
+* <2017-12-20 三>
+  晋K37538
+* <2017-12-21 四>
+  null.jpg: 这张图片可以尽量少
+  
+* <2017-12-25 一>
+  1. 将深瞐和mxnet的调用参数统一, 全部修改为-
+  2. 将选择的图片打包上传到173上 all_type_checked_pic.tar.gz
+  bash 开进程 { }&
+  split -l number file : 将一个文件分切为行数为number的文件名字按照x[a-z][a-z]
+  for ;do something;done
+
+* <2017-12-26 二>
+  学 皖 苏 南
+* <2017-12-29 五>
+** 张家界-深瞐 net 
+   ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/20171124/t43080200001210002664/3/2 -output_dir=/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/20171124/t43080200001210002664/3/2_shenmo
+   unInitialize SDK: 0
+   total time: 136.463s  total image: 1232   average time: 110.766ms
+   2017年 12月 29日 星期五 11:28:20 CST
+   
+* <2018-01-02 二>
+** 张家界-深瞐 net single thread
+   ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_3408x2008 -output_dir=/home/data/he/test_zhangjiajie_3408x2008_shenmo
+   unInitialize SDK: 0
+   total time: 136.413s  total image: 1000   average time: 136.413ms
+   2018年 01月 02日 星期二 14:41:13 CST
+
+    ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_1920x1080 -output_dir=/home/data/he/test_zhangjiajie_1920x1080_shenmo
+	unInitialize SDK: 0
+	total time: 67.6972s  total image: 1000   average time: 67.6972ms
+	2018年 01月 02日 星期二 14:52:03 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_1920x1080 -output_dir=/home/data/he/test_zhangjiajie_1920x1080_shenmo -thread_num=4
+	unInitialize SDK: 0
+	total time: 35.6385s  total image: 1000   average time: 35.6385ms
+	2018年 01月 02日 星期二 15:01:21 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_3408x2008 -output_dir=/home/data/he/test_zhangjiajie_3408x2008_shenmo -thread_num=4
+	unInitialize SDK: 0
+	total time: 58.1388s  total image: 1000   average time: 58.1388ms
+	2018年 01月 02日 星期二 15:06:29 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result  -thread_num=4
+	unInitialize SDK: 0
+	total time: 44.8501s  total image: 1000   average time: 44.8501ms
+	2018年 01月 02日 星期二 15:28:44 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result  -thread_num=4
+	unInitialize SDK: 0
+	total time: 48.3649s  total image: 1000   average time: 48.3649ms
+	2018年 01月 02日 星期二 15:41:50 CST
+**  北大数据
+	/home/data/mobile_hard_disk_bak/tmp/machine_learning_database/PKU_vehicle_dataset/images
+   
+   10.30.24.20: root Bell1234
+* <2018-01-05 五>
+  img_he:
+  
+  cat file.lst | grep -Pv "[^[:ascii:]]"    : 输出非ascii的文件
+  
+  rename命令批量修改文件
+
+* <2018-01-08 一>
+  不标没有人的moto和bike
+* <2018-01-12 五>
+
+  /home/data/mobile_hard_disk_bak/tmp/train_task/detect_driver_ssd/data
+
+
+  /var/service/mxnet/example/PlateTmp/match
+
+
+  -rw-r--r-- 1 heyulin heyulin 190191 1月   8 13:50 ITGE6BA2A0B1AD214F3CAAF7914F66E51C8F.jpg
+  3135
+
+* <2018-01-15 一>
+** labelimg 改进
+  a: previous
+  d: next
+  s: edit window
+  f: zoom in / zoom out
+  
+* <2018-01-17 三>
+  binutils
+  coreutils
+  findutils
+  net-tools
+  vim
+  kernel
+  emacs
+* <2018-01-29 一> 
+  /home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/zhangjiajie
+  
+  ffmpeg -i test.mp4 test.yuv  : 
+  
+  opencv VedioCapture need ffmpeg
+* <2018-01-30 二> 
+  calc_params::DetectRegion: 视频检测的多边形区域,采用[[x1,y1],[x2,y2],...[xn,yn]]表示,其中[x,y]表示多边形的一个顶点。
+  calc_params::IsDet: 是否对该路视频进行检测跟踪
+  得到的文件中FilterResults没有结果
+  
+    "FilterResults": [
+    {
+      "VideoChannel": 0,
+      "Vehicles": [],
+      "ReleaseCacheFrames": [],
+      "Pedestrains": [],
+      "Message": "ok",
+      "Code": 0,
+      "Bikes": []
+    }
+   ],
+
+   FilterResults中没有信息
+   是否是对于视频中的每一帧进行解析，输出信息没有和帧相关的信息。文档中有一个FilterResults::Bikes::Detect::Timestamp有
+   是否每一帧都有相关的信息，还是从中选择部分帧？
+   FilterResults和ImageResults是如何对应不同的帧？
+   
+
+
+   int32_t __stdcall seemmo_video_pvc(
+   int32_t frame_num,
+   const int32_t* video_chn,
+   const uint64_t* timestamp, 
+   const uint8_t** ppbgr24,const uint32_t* height,
+   const uint32_t* width,
+   const char** calc_params,
+   char* rsp_buf,
+   int32_t& buff_len,
+   int32_t timeout)
+
+
+   timestamp: 每个视频帧的时间戳数组,数组大小为 frame_num
+   那么这个时间戳是以什么为单位 秒 毫秒 ?
+* <2018-01-31 三>
+  同时处理10帧的图片
+  ImageResults-FilterResults-Vehicle-2
+  ImageResults中有10元素，每个代表一个图片的结果
+  FilterResults中是有当前帧第几帧的信息 
+  Timestamp从0开始
+  Vehicles中没有相应的司机乘客信息，只有车辆信息
+  
+* <2018-02-01 四>
+  seemmo_video_pvc: 结果中包含FilterResults和ImageResults两部分，其中FilterResults中的字段为空
+                    ImageResults中每一帧都有结果，每一帧是一个元素
+		    
+  seemmo_video_pvc_end: 强制输出视频跟踪结果，FilterResults中包含Bikes,Pedestrains,Vehicles等
+                        每个目标中包含有对应的帧的信息。如Bikes中对应一个元素中包含Timestamp
+	 		
+  			
+  Trail:该目标相对于前帧的位移
+  VideoChannel:目标所在的视频通路
+  IsCache:当前输入的帧是否需要缓存
+  ReleaseCacheFrames:可以释放的帧编号
+  ContextCode: 上下文信息,异步识别时必须传入  
+
+  深瞐视频的sdk分析
+
+* <2018-02-05 一>
+  seemmo_video_pvc 和 seemmo_video_pvc_end
+  看病 0.5天
+* <2018-02-06 二>
+  smb://10.30.26.173/sharpath/deeplearning
+  smb://10.30.26.173/sharpath/deeplearning/modules/shenmo_video
+  从10.30.26.173/sharpath/deeplearning/modules/中下载shenmo_video
+  cd shenmo_video/centos7/bin/
+  make -f Makefile
+  实例
+* <2018-02-09 五>
+  Img: /home/heyulin/Desktop/select-pic_1920x1080/t430802000342-1920x1080-20171225-46299864f0fa11e7bb642c4d54f11855.jpg -> Its xml: /home/heyulin/Desktop/select-pic_1920x1080_ctb_xml/t430802000342-1920x1080-20171225-46299864f0fa11e7bb642c4d54f11855.xml
+
+* <2018-02-23 五>
+  export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
+  ./filetran 转mp4时 ps -> yuv -> h264 -> mp4
+* <2018-02-27 一>
+  梳理卓视智通demo运行流程,调查接口使用
+* <2018-02-27 二>
+  整理卓视智通文档
+* <2018-02-28 三>
+  整理文档
+  唯一ID 如果中间流断了 ID是否还继续 
+  	VE_AjustPictParam vAjustParam;					// 图像矫正参数 ?? 这个我们项目是否需要
+	VehicleRecoParam vVehicleRecoParam;				// 车辆识别参数
+	HumanRecoParam	 vHumanRecoParam;				// 行人识别参数
+	ModelDetectParam vModelDetectParam;				// 检测模型参数
+	这四个是否可以同时设置
+* <2018-03-01 四>
+   10帧 huancun 
+   16G 8lu 一张card 1080p
+   每一路都要配置
+   80% cpu>=2.4GH
+   ubuntu 
+* <2018-03-02 五>
+  筛选数据（打电话，安全带）
+  处理数据名字
+* <2018-03-05 一>
+  整理卓视文档,将代码中识别出的信息属性整理，添加到卓视文档中，并整理卓视文档
+* <2018-03-06 二>
+ 卓视输出结果的问题
+
+
+    VE_ObjectList,VE_Object,VE_ObjectInfo 
+	各有一个时间戳，这些时间是什么时间？ 绝对时间？ 还是什么其他时间？
+
+    VE_VehicleInfo中
+	veu16		nVehicleFeatureNum;				//特征维度//
+	vef32		fVehicleCarFeature[4096];		//车辆子图像特征//
+	vef32		fVehicleImgFeature[4096];		//挡风玻璃子特征//
+    这三个都什么含义，有什么功能？
+
+    各类位置： 位置是用像素坐标表示？还是别的表示方式？
+    
+    颜色，车辆都是用一个数组再加一个索引，这个设计有什么好处？为什么不用一个整形
+    外加一个枚举，这些内存可以不占用？
+
+    VE_VehicleInfo中
+         ves8		cVehicleColorDarkOrLight[10];	//车辆深浅色//
+    这个深浅色，用10个元素的数组是含义，是每个含有的元素代表一个深浅值，还是？
+
+
+
+
+  所有的co增扩10倍 
+        水平翻转 
+        高斯模糊 
+        前后随机倾斜角度 
+        随机裁剪图片 上下的倾斜一点点 
+  call 10倍
+  codriver 2 
+  belt 1
+    
+* <2018-03-07 三>
+  multilayer perceptron (MLP) 多层神经网络
+  
+  

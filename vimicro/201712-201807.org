@@ -1,0 +1,1201 @@
+* <2017-12-01 五>
+  resnext.py : 生成的模型不能使用
+  预测时的probs全部没有波动
+  添加HostName字段
+* <2017-12-04 一>
+  + [ ] task [0%]
+	+ [ ] kafka的python接口 [0%]
+	  + [ ] consumer接口
+	  + [ ] producer接口
+	  + [ ] 解析consumer接口的信息
+	  + [ ] 产生写入kafka的信息
+	+ [ ] mxnet生成json格式定义
+记录日志  
+* <2017-12-04 一>
+  + [ ] task [0%]
+	+ [ ] kafka的python接口 [0%]
+	  + [ ] consumer接口
+	  + [ ] producer接口
+	  + [ ] 解析consumer接口的信息
+	  + [ ] 产生写入kafka的信息
+	+ [ ] mxnet生成json格式定义
+记录日志  
+* <2017-12-07 四>
+  车牌识别
+  多个结果需要一个
+  如果图片坏了，mxnet识别的不出是否会终止
+  
+  测试的topic
+  name:   test-mxnet
+  partitions: 8个
+  
+** 查看kafka中的topic信息
+   JMX_PORT=9778 bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 10.30.26.160:9092 --topic test-mxnet
+* <2017-12-08 五>
+** 查看kafka下consumer中对应的所有的所有group  
+   JMX_PORT=9778 bin/kafka-consumer-groups.sh --bootstrap-server 10.30.26.160:9092 --new-consumer --list
+** 
+
+#+begin_src C
+
+typedef struct {
+   int i[10];
+   int num;
+}arr;
+void main(){
+   arr a={
+     {1,2,3,4,5,6,7,8,9,10},10
+   };
+   arr b;
+   b = a;
+   printf("%d\n", b.i[5]);
+}
+#+end_src
+
+#+RESULTS:
+   
+* <2017-12-11 一>
+* <2017-12-13 三>
+  + [-] task [66%]
+    + [X] 坏图片
+    + [X] 多线程
+    + [ ] 深瞐和mxnet性能对比
+* <2017-12-14 四>
+** 测试深瞐的速度
+   数据: 从/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/picdata1/org_big_pic
+      随机选出10000张图片至/home/data/he/test_shenmo_mxnet_speed_data
+	  输出结果至/home/data/he/test_shenmo_result
+   命令 :
+	     cd /root/gpu_core_2.1.5.3_publish_old/bin
+	     ./demo_linux_threads -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result -thread_num=4 -auth_type=1
+	     ./demo_linux_threads -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result -thread_num=4 -auth_server=10.30.23.51:12821
+   
+   结果:
+   total time: 175.87s  total image: 10000   average time: 17.587ms
+   2017年 12月 14日 星期四 10:44:40 CST
+** 函数式编程特点
+   高阶函数
+   偏应用函数
+   柯里化
+   闭包
+   各个独立的部分的执行顺序可以随意打乱
+* <2017-12-15 五>
+  + [X] task [100%]
+	+ [X] 将python-mxnet的源码上传
+	+ [X] 测试深瞐的cpu使用率
+	  [[file:/home/heyulin/shenmo_4_cpu 2017-12-15 18-10-23.png]]
+	  [[file:/home/heyulin/shenmo_1_cpu 2017-12-15 18-11-38.png]]
+	  单线程100%左右
+      4线程260%左右
+	  图片显示: C-c C-x C-v
+	  如何控制图片大小显示: 
+	  图片排版
+** c++
+   g++5.4不支持模型定义和实现的分离，不支持export关键字
+* <2017-12-18 一>
+  需要的图片格式
+  使用cv2.imdecode函数速度为86s/10000
+  87s:
+    imread()
+	transpose()
+  87s:
+    imread()
+  深瞐c++读图片:  16s~17s/1000 160s~170s/10000
+  c++读取图片的速度比python慢 ??
+  
+* <2017-12-19 二>
+  valgrind.org
+  install:
+   git clone git://sourceware.org/git/valgrind.git
+* <2017-12-20 三>
+  晋K37538
+* <2017-12-21 四>
+  null.jpg: 这张图片可以尽量少
+  
+* <2017-12-25 一>
+  1. 将深瞐和mxnet的调用参数统一, 全部修改为-
+  2. 将选择的图片打包上传到173上 all_type_checked_pic.tar.gz
+  bash 开进程 { }&
+  split -l number file : 将一个文件分切为行数为number的文件名字按照x[a-z][a-z]
+  for ;do something;done
+
+* <2017-12-26 二>
+  学 皖 苏 南
+* <2017-12-29 五>
+** 张家界-深瞐 net 
+   ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/20171124/t43080200001210002664/3/2 -output_dir=/home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/20171124/t43080200001210002664/3/2_shenmo
+   unInitialize SDK: 0
+   total time: 136.463s  total image: 1232   average time: 110.766ms
+   2017年 12月 29日 星期五 11:28:20 CST
+   
+* <2018-01-02 二>
+** 张家界-深瞐 net single thread
+   ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_3408x2008 -output_dir=/home/data/he/test_zhangjiajie_3408x2008_shenmo
+   unInitialize SDK: 0
+   total time: 136.413s  total image: 1000   average time: 136.413ms
+   2018年 01月 02日 星期二 14:41:13 CST
+
+    ./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_1920x1080 -output_dir=/home/data/he/test_zhangjiajie_1920x1080_shenmo
+	unInitialize SDK: 0
+	total time: 67.6972s  total image: 1000   average time: 67.6972ms
+	2018年 01月 02日 星期二 14:52:03 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_1920x1080 -output_dir=/home/data/he/test_zhangjiajie_1920x1080_shenmo -thread_num=4
+	unInitialize SDK: 0
+	total time: 35.6385s  total image: 1000   average time: 35.6385ms
+	2018年 01月 02日 星期二 15:01:21 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_zhangjiajie_3408x2008 -output_dir=/home/data/he/test_zhangjiajie_3408x2008_shenmo -thread_num=4
+	unInitialize SDK: 0
+	total time: 58.1388s  total image: 1000   average time: 58.1388ms
+	2018年 01月 02日 星期二 15:06:29 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result  -thread_num=4
+	unInitialize SDK: 0
+	total time: 44.8501s  total image: 1000   average time: 44.8501ms
+	2018年 01月 02日 星期二 15:28:44 CST
+
+	./demo_linux_threads -auth_server="10.30.23.51:12821" -i=/home/data/he/test_shenmo_mxnet_speed_data -output_dir=/home/data/he/test_shenmo_result  -thread_num=4
+	unInitialize SDK: 0
+	total time: 48.3649s  total image: 1000   average time: 48.3649ms
+	2018年 01月 02日 星期二 15:41:50 CST
+**  北大数据
+	/home/data/mobile_hard_disk_bak/tmp/machine_learning_database/PKU_vehicle_dataset/images
+   
+   10.30.24.20: root Bell1234
+* <2018-01-05 五>
+  img_he:
+  
+  cat file.lst | grep -Pv "[^[:ascii:]]"    : 输出非ascii的文件
+  
+  rename命令批量修改文件
+
+* <2018-01-08 一>
+  不标没有人的moto和bike
+* <2018-01-12 五>
+
+  /home/data/mobile_hard_disk_bak/tmp/train_task/detect_driver_ssd/data
+
+
+  /var/service/mxnet/example/PlateTmp/match
+
+
+  -rw-r--r-- 1 heyulin heyulin 190191 1月   8 13:50 ITGE6BA2A0B1AD214F3CAAF7914F66E51C8F.jpg
+  3135
+
+* <2018-01-15 一>
+** labelimg 改进
+  a: previous
+  d: next
+  s: edit window
+  f: zoom in / zoom out
+  
+* <2018-01-17 三>
+  binutils
+  coreutils
+  findutils
+  net-tools
+  vim
+  kernel
+  emacs
+* <2018-01-29 一> 
+  /home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/zhangjiajie
+  
+  ffmpeg -i test.mp4 test.yuv  : 
+  
+  opencv VedioCapture need ffmpeg
+* <2018-01-30 二> 
+  calc_params::DetectRegion: 视频检测的多边形区域,采用[[x1,y1],[x2,y2],...[xn,yn]]表示,其中[x,y]表示多边形的一个顶点。
+  calc_params::IsDet: 是否对该路视频进行检测跟踪
+  得到的文件中FilterResults没有结果
+  
+    "FilterResults": [
+    {
+      "VideoChannel": 0,
+      "Vehicles": [],
+      "ReleaseCacheFrames": [],
+      "Pedestrains": [],
+      "Message": "ok",
+      "Code": 0,
+      "Bikes": []
+    }
+   ],
+
+   FilterResults中没有信息
+   是否是对于视频中的每一帧进行解析，输出信息没有和帧相关的信息。文档中有一个FilterResults::Bikes::Detect::Timestamp有
+   是否每一帧都有相关的信息，还是从中选择部分帧？
+   FilterResults和ImageResults是如何对应不同的帧？
+   
+
+
+   int32_t __stdcall seemmo_video_pvc(
+   int32_t frame_num,
+   const int32_t* video_chn,
+   const uint64_t* timestamp, 
+   const uint8_t** ppbgr24,const uint32_t* height,
+   const uint32_t* width,
+   const char** calc_params,
+   char* rsp_buf,
+   int32_t& buff_len,
+   int32_t timeout)
+
+
+   timestamp: 每个视频帧的时间戳数组,数组大小为 frame_num
+   那么这个时间戳是以什么为单位 秒 毫秒 ?
+* <2018-01-31 三>
+  同时处理10帧的图片
+  ImageResults-FilterResults-Vehicle-2
+  ImageResults中有10元素，每个代表一个图片的结果
+  FilterResults中是有当前帧第几帧的信息 
+  Timestamp从0开始
+  Vehicles中没有相应的司机乘客信息，只有车辆信息
+  
+* <2018-02-01 四>
+  seemmo_video_pvc: 结果中包含FilterResults和ImageResults两部分，其中FilterResults中的字段为空
+                    ImageResults中每一帧都有结果，每一帧是一个元素
+		    
+  seemmo_video_pvc_end: 强制输出视频跟踪结果，FilterResults中包含Bikes,Pedestrains,Vehicles等
+                        每个目标中包含有对应的帧的信息。如Bikes中对应一个元素中包含Timestamp
+	 		
+  			
+  Trail:该目标相对于前帧的位移
+  VideoChannel:目标所在的视频通路
+  IsCache:当前输入的帧是否需要缓存
+  ReleaseCacheFrames:可以释放的帧编号
+  ContextCode: 上下文信息,异步识别时必须传入  
+
+  深瞐视频的sdk分析
+
+* <2018-02-05 一>
+  seemmo_video_pvc 和 seemmo_video_pvc_end
+  看病 0.5天
+* <2018-02-06 二>
+  smb://10.30.26.173/sharpath/deeplearning
+  smb://10.30.26.173/sharpath/deeplearning/modules/shenmo_video
+  从10.30.26.173/sharpath/deeplearning/modules/中下载shenmo_video
+  cd shenmo_video/centos7/bin/
+  make -f Makefile
+  实例
+* <2018-02-09 五>
+  Img: /home/heyulin/Desktop/select-pic_1920x1080/t430802000342-1920x1080-20171225-46299864f0fa11e7bb642c4d54f11855.jpg -> Its xml: /home/heyulin/Desktop/select-pic_1920x1080_ctb_xml/t430802000342-1920x1080-20171225-46299864f0fa11e7bb642c4d54f11855.xml
+
+* <2018-02-23 五>
+  export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
+  ./filetran 转mp4时 ps -> yuv -> h264 -> mp4
+* <2018-02-27 一>
+  梳理卓视智通demo运行流程,调查接口使用
+* <2018-02-27 二>
+  整理卓视智通文档
+* <2018-02-28 三>
+  整理文档
+  唯一ID 如果中间流断了 ID是否还继续 
+  	VE_AjustPictParam vAjustParam;					// 图像矫正参数 ?? 这个我们项目是否需要
+	VehicleRecoParam vVehicleRecoParam;				// 车辆识别参数
+	HumanRecoParam	 vHumanRecoParam;				// 行人识别参数
+	ModelDetectParam vModelDetectParam;				// 检测模型参数
+	这四个是否可以同时设置
+* <2018-03-01 四>
+   10帧 huancun 
+   16G 8lu 一张card 1080p
+   每一路都要配置
+   80% cpu>=2.4GH
+   ubuntu 
+* <2018-03-02 五>
+  筛选数据（打电话，安全带）
+  处理数据名字
+* <2018-03-05 一>
+  整理卓视文档,将代码中识别出的信息属性整理，添加到卓视文档中，并整理卓视文档
+* <2018-03-06 二>
+ 卓视输出结果的问题
+
+
+    VE_ObjectList,VE_Object,VE_ObjectInfo 
+	各有一个时间戳，这些时间是什么时间？ 绝对时间？ 还是什么其他时间？
+
+    VE_VehicleInfo中
+	veu16		nVehicleFeatureNum;				//特征维度//
+	vef32		fVehicleCarFeature[4096];		//车辆子图像特征//
+	vef32		fVehicleImgFeature[4096];		//挡风玻璃子特征//
+    这三个都什么含义，有什么功能？
+
+    各类位置： 位置是用像素坐标表示？还是别的表示方式？
+    
+    颜色，车辆都是用一个数组再加一个索引，这个设计有什么好处？为什么不用一个整形
+    外加一个枚举，这些内存可以不占用？
+
+    VE_VehicleInfo中
+         ves8		cVehicleColorDarkOrLight[10];	//车辆深浅色//
+    这个深浅色，用10个元素的数组是含义，是每个含有的元素代表一个深浅值，还是？
+
+
+
+
+  所有的co增扩10倍 水平翻转 高斯模糊 前后随机倾斜角度 随机裁剪图片 上下的倾斜一点点 
+  call 10倍
+  codriver 2 
+  belt 1
+    
+* <2018-03-07 三>
+  （multilayer perceptron (MLP) ）或者叫多层神经网络
+   对图片进行增扩
+  
+* <2018-03-08 四>
+   一个量, 在不同的参考系下按照某种特定的法则进行变换, 就是张量
+   A tensor is something that transforms like a tensor!
+   将shenmo的授权提到命令行中
+   配置文件的路径将修改为
+   路径相对，配置文件中
+   解决深瞐中ip错误问题
+   
+   配合华为搭建智能识别环境，解决深瞐中不能手动设置ip问题
+* <2018-03-09 五>
+  配合华为搭建智能识别环境, mxnet中kafka不能连接问题
+  当初始化一个程序时需要将信息打印出来
+  41：50
+
+* <2018-03-12 一>
+
+  面试主要是分析问题和解决问题的能力
+  
+  c 试题 主要内存和指针的使用
+  在little endian and big endian两种情况下
+  只在下
+  char add(unsigned short a, unsigned char b){
+  return a + b;
+  }
+  int main(){
+  int a = 0x87654321;
+  int b = 0x89abcdef;
+  printf("%c\n", add(a, b)+0x51);
+  }
+  
+  // 交换不使用其他变量
+  bool swap(int* a, int *b){
+  if ((NULL == a) || (NULL == b)){return false;}
+  *a = *a + *b;
+  *b = *a - *b;
+  *a = *a - *b;
+  return true;
+  }
+  int swap(int& a, int& b){
+  a = a + b;
+  b = a - b;
+  a = a - b;
+  }
+  这样做会出现什么问题？
+  如果a+b之和大于0x7fffffff,那么出现溢出
+
+  // 宏定义的问题
+  #define ADD(a, b)  a+b
+  
+  void main(){
+  int a = 10;
+  int b = 20;
+  printf("%d\n", ADD(a,b)*ADD(b, a));
+  }
+  
+  // static问题
+  
+  // 结构体的问题
+  1. 
+  typedef struct{
+  int a;
+  union{
+  int a;
+  short b;
+  char c;
+  }c;
+  int b;
+  }name;
+  printf("%d\n", sizeof(name));
+
+  12
+
+  2. 
+  typedef union{
+  int a;
+  struct{char a; char b; char c; char d;}p;
+  }addr;
+
+  void main(){
+  addr p;
+  p.a = 0x0102a8c0;
+  printf("%d.%d.%d.%d\n",p.p.a,p.p.b,p.p.c,p.p.d);
+  }
+  192.168.2.1
+
+  // 指针
+  定义一个函数
+  返回值是一个指向一个无返回值有一个int型参数的函数指针
+  参数有二个
+  一个整型
+  一个指向一个无返回值有一个int型参数的函数指针
+
+  // 数学
+  // 如果给一个101个元素的数组，存储的数是1-100其中有一个重复，如何找出其中重复的
+  int get_repeat(int arr[], int len){
+  
+  }
+  // byte操作
+  // 如果有都是成对出现的，如何找出其中一个不重复的
+  int get_no_repeat(int arr[], int len){
+  
+  }
+  
+  c++ 面向对象的思想 简单的实现
+  // 类的问题
+  面向对象的三大特点
+  
+* <2018-03-15 四>
+  电话面试南京CPP工程师
+  电话面试很多
+* <2018-03-16 五>
+  配合成都测试
+  将卓视的文档修改为markdown格式
+* <2018-03-19 一>
+  将卓视的文档修改为markdown格式
+  docker安装使用 
+  测试环境
+  1个docker下的双显卡，出现网络延时
+  
+* <2018-03-20 二>
+
+  测试docker
+  gpu 1    docker 1       33-34 ms   cpu: 250 %
+  gpu 2    docker 2       21 ms
+  gpu 1    docker 2       61 ms / 2
+  gpu 2    docker 1       25 ms 
+  
+* <2018-03-21 三>
+  详细测试物理机上mxnet的性能，单个，双个gpu,送入不同张数时的性能
+  gpu 1   cpu 8
+      cpu top: 624%  
+      total_time:  163423.695 ms  
+	  picture sum:  9000
+      average_time:  18.158 ms
+	  每次送1000张
+	  
+	  cpu : 640%
+	  total_time:  164472.096 ms
+	  picture sum:  9000
+	  average_time:  18.274 ms
+	  每次送900张
+	  total_time:  165100.015 ms
+	  picture sum:  9000
+	  average_time:  18.344 ms
+	  每次送900张
+
+	  cpu top: 630%
+	  total_time:  156765.563 ms
+	  picture sum:  9000
+	  average_time:  17.418 ms
+	  每次送800张
+	  total_time:  157381.301 ms
+	  picture sum:  9000
+	  average_time:  17.486 ms
+	  每次送800张
+	  total_time:  160604.399 ms
+	  picture sum:  9000
+	  average_time:  17.844 ms
+	  每次送800张
+
+	  cpu : 630%
+	  total_time:  155299.706 ms
+	  picture sum:  9000
+	  average_time:  17.255 ms
+	  每次送700张
+	  total_time:  153461.093 ms
+	  picture sum:  9000
+	  average_time:  17.051 ms
+	  每次送700张
+	  total_time:  157112.757 ms
+	  picture sum:  9000
+	  average_time:  17.456 ms
+	  每次送700张
+
+	  cpu : 620%
+	  total_time:  167701.828 ms
+	  picture sum:  9000
+	  average_time:  18.633 ms
+	  每次送600张
+	  total_time:  166015.822 ms
+	  picture sum:  9000
+	  average_time:  18.446 ms
+	  每次送600张
+	  total_time:  165474.464 ms
+	  picture sum:  9000
+	  average_time:  18.386 ms
+	  每次送600张
+
+	  
+	  cpu : 600% 
+	  total_time:  165731.79 ms
+	  picture sum:  9000
+	  average_time:  18.414 ms
+	  每次送500张
+	  total_time:  169647.115 ms
+	  picture sum:  9000
+	  average_time:  18.849 ms
+	  每次送500张
+
+	  cpu : 410%
+	  total_time:  174681.423 ms
+	  picture sum:  9000
+	  average_time:  19.409 ms
+	  每次送300张
+
+	  cpu : 410%
+	  total_time:  175527.13 ms
+	  picture sum:  9000
+	  average_time:  19.503 ms
+	  每次送300张
+
+
+	  cpu : 370%
+	  total_time:  86986.245 ms
+	  picture sum:  4000
+	  average_time:  21.746 ms
+	  每次送100张
+
+
+	  cpu: 260%
+	  total_time:  33122.971 ms  
+	  picture sum:  1000
+	  average_time:  33.122 ms
+	  每次送30张
+
+	  cpu: 123%
+	  total_time:  333694.929 ms
+	  picture sum:  1000
+	  average_time:  333.694 ms
+	  每次送1张
+
+
+  gpu 0,1 cpu 8 
+      cpu top: 624%  gpu : 89%-93%
+      total_time:  119619.782 ms  
+	  picture sum:  9000
+      average_time:  13.291 ms
+	  每次送1000张
+	  total_time:  114856.132 ms
+	  picture sum:  9000
+	  average_time:  12.761 ms
+	  每次送1000张
+
+	  cpu : 660%
+	  total_time:  115235.433 ms
+	  picture sum:  9000
+	  average_time:  12.803 ms
+	  每次送900张
+	  total_time:  115277.469 ms
+	  picture sum:  9000
+	  average_time:  12.808 ms
+	  每次送900张
+	  total_time:  115966.156 ms
+	  picture sum:  9000
+	  average_time:  12.885 ms
+	  每次送900张
+
+	  cpu : 660%
+	  total_time:  112969.976 ms
+	  picture sum:  9000
+	  average_time:  12.552 m
+	  每次送800张
+	  total_time:  113045.551 ms
+	  picture sum:  9000
+	  average_time:  12.56 ms
+	  每次送800张
+	  total_time:  113812.047 ms
+	  picture sum:  9000
+	  average_time:  12.645 ms
+	  每次送800张
+	  
+	  cpu : 660%
+	  total_time:  107745.364 ms
+	  picture sum:  9000
+	  average_time:  11.971 ms
+	  每次送700张
+	  total_time:  110419.802 ms
+	  picture sum:  9000
+	  average_time:  12.268 ms
+	  每次送700张
+	  total_time:  109963.876 ms
+	  picture sum:  9000
+	  average_time:  12.218 ms
+	  每次送700张
+	  
+	  cpu : 650%
+	  total_time:  124888.188 ms
+	  picture sum:  9000
+	  average_time:  13.876 ms
+	  每次送600张
+	  total_time:  117674.758 ms
+	  picture sum:  9000
+	  average_time:  13.074 ms
+	  每次送600张
+	  total_time:  119028.609 ms
+	  picture sum:  9000
+	  average_time:  13.225 ms
+	  每次送600张
+	  
+	  cpu : 640%
+	  total_time:  118734.258 ms
+	  picture sum:  9000
+	  average_time:  13.192 ms
+	  每次送500张
+	  total_time:  117944.033 ms
+	  picture sum:  9000
+	  average_time:  13.104 ms
+	  每次送500张
+	  total_time:  118272.498 ms
+	  picture sum:  9000
+	  average_time:  13.141 ms
+	  每次送500张
+	  
+	  
+	  cpu : 560%
+	  total_time:  121681.773 ms
+	  picture sum:  9000
+	  average_time:  13.52 ms
+	  每次送300张	  
+	  total_time:  121039.404 ms
+	  picture sum:  9000
+	  average_time:  13.448 ms
+	  每次送300张	  
+	  
+	  cpu : 560%
+	  total_time:  122018.227 ms
+	  picture sum:  9000
+	  average_time:  13.557 ms
+	  每次送100张	  
+	  total_time:  122676.503 ms
+	  picture sum:  9000
+	  average_time:  13.63 ms
+	  每次送100张	     
+	  
+	  cpu : 360%
+	  total_time:  224905.2 ms
+	  picture sum:  9000
+	  average_time:  24.989 ms
+	  每次送30张	  
+
+	  cpu : 
+	  每次送1张	
+* <2018-03-22 四>
+  docker数据
+* <2018-03-23 五>
+  python isinstance()函数
+    type() 不会认为子类是一种父类类型，不考虑继承关系。
+    isinstance() 会认为子类是一种父类类型，考虑继承关系。
+* <2018-03-26 一>
+  
+
+  这周的任务
+  电话面试的
+  许可
+  丁红娟
+
+  工具路径：
+  /home/data/fw/tools/src
+  convert: 转换
+      gen_lst.py : xml转化为lst， 目录指定写成命令行参数
+	  itez_to_ssd_plate.py : 和itez扣出来的车牌进行比较
+	  lst_to_vocxml.py : 从lst生成xml
+	  shenmo_to_vocxml.py : 深目的json->xml
+  cut_rect:  扣图片
+      get_vehicleimg_by_rest.py : 从程序生成的txt读取信息扣图片
+	  img_rect.py : 扣图片并放大
+	  img_tool.py : 扣图片
+  match : 在大图片中找到小图片位置
+      smallPic_match_igPic_rect.py : 大图片配置小图片生成txt文档
+	  match_pic.py : 核心算法
+  org_data_arrange : 原始数据整理
+  pic_process : 将小图片贴到大图片中
+      gen_modelled_pic.py : 贴图片，不能重叠这里有个算法控制
+  show : 解析json文件，并将信息画在图片上，显示图片
+         生成rec之前的lst,可以直接show出来
+      show_img_lst.py : 从lst图片的
+	  
+  xml_related : java
+      SmallPic_for_labelImg_xml.java : 小车牌放大之后标记，然后再缩小为原图片
+	  XML_add_object.java : 合并xml, 在xml中添加属性
+	  XML_self_arrange.java : 在修改xml属性nocall no
+
+	  
+	  DataCollecter.java : 模型生成txt和人工标记的xml进行对比，得到模型的准确率 以bench_data为基准 actual_data为模型生成的
+	  Count*.java : 所有计算包括车辆，车牌，司机安全带的个数， 打电话的个数 打电话中判断是对的个数
+      
+  xml -> lst -> rec     
+  xml : 标记图片的xml (labelme为准) 
+  xml->lst : 使用gen_lst.py生成
+  lst -> rec : python im2rec.py  .lst   dir   --shuffle Ture --pack-label "1"  其中dir为lst中的图片所在目录 im2rec.py在mxnet/tools下
+ 
+  python train.py --prefix ./  --batch-size --num-example 1000 --lr 0.0001 --pretrained "" --network
+
+
+
+
+  zhangjiajie/txt
+
+  mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/zhangjiajie/txt/
+  这里是生成的txt，生成txt的代码在 vehicl
+  big-pic_1920x1080_vehicle_recognize_2.1.txt
+  big-pic_1920x1080_vehicle_recognize_3.0.txt
+  big-pic_3408x2008_vehicle_recognize_2.1.txt
+  
+  t430822000160-1920x1080-20171225-22a7b154f0fb11e7bb642c4d54f11855_b1920_1080	1008,324,1105,353_plate_蓝~黑G9A771_0.44374	852,49,1223,398_car_金杯-厦门金龙~海狮（金杯）-海狮（厦门金龙）~2010~轿车~黑色_0.995215
+
+
+  1008,324,1105,353_plate_蓝~黑G9A771_0.44374   : 
+* <2018-03-29 四>
+  接手在使用mxnet中处理图片的一些工具
+  接手陈春雁关于caffe工作
+  接手陈春雁关于在线标注工具的工作
+  接手有关mxnet图片识别的代码
+  接手有关mxnet图片识别的代码
+* <2018-04-02 一>
+  请假
+  熟悉redis
+* <2018-04-03 二>
+  面试
+      方平 : 18656302886
+	  伍忠原 : 15101176328
+  读写kafka数据较大时的处理
+     
+  熟悉redis 
+      redis : 
+    方平
+
+男|2年工作经验|1990年4月
+现居住于江苏 南京|硕士|江苏-南京户口
+
+方平要求您给出反馈后才展示联系方式，请点击下方按钮进行反馈
+
+我要联系TA
+
+全职
+
+期望从事职业：
+数据通信工程师、
+期望月薪：
+10001-15000元/月
+目前状况：
+我目前在职，正考虑换个新环境（如有合适的工作机会，到岗时间一个月左右）
+期望从事行业：
+通信/电信运营、增值服务、通信/电信/网络设备
+工作经历
+2016/03 - 2018/03
+南京吗动科技有限公司 （2年）
+工程师|8001-10000元/月
+通信/电信运营、增值服务
+工作描述：技术研究，主要开发企业需求的软件和大数据软件的研究和开发。
+教育经历
+2015/09 - 2016/07
+南京航空航天大学  电子信息工程  统招  硕士
+
+* <2018-04-04 三>
+  redis client 50%
+  gluon 
+  
+
+
+* <2018-04-08 日>
+  
+ 
+  // 如果超过max则不加入图片
+  // 如果低于min则加图片
+  struct limit{
+  unsigned short min; 
+  unsigned short max; 
+  }limit;
+
+
+  fetch.message.max.bytes=5242880   // 没有这个
+  replica.fetch.max.bytes=9291456   // 这个是server的配置
+  max.partition.fetch.bytes=5242880
+  max.request.size=5242880
+
+
+  http://10.30.23.248/bigdata_ai/pd-backlog/blob/master/TRS/vechiclerecognition/DataBaseDesign.md
+
+  
+  选择redi封装redis接口,并
+  设计r代码块
+
+  
+* <2018-04-09 一>
+  能不能让程序自动释放内存
+  在程序结束时
+  
+  google的gflags需要glog,这个依赖太坑了。。。
+  kafka读入数据写入redis基本完成
+  kafka的C版本接口中一次读取多条数据的接口没有找到
+* <2018-04-10 二>
+  完成redis读取工作
+* <2018-04-11 三>
+  pg_result   : 这个结构体没有找到
+  
+
+  Python里面如何拷贝一个对象？（赋值，浅拷贝，深拷贝的区别）
+  答：赋值（=），就是创建了对象的一个新的引用，修改其中任意一个变量都会影响到另一个。
+  浅拷贝：创建一个新的对象，但它包含的是对原始对象中包含项的引用（如果用引用的方式修改其中一个对象，另外一个也会修改改变）{1,完全切片方法；2，工厂函数，如list()；3，copy模块的copy()函数}
+  深拷贝：创建一个新的对象，并且递归的复制它所包含的对象（修改其中一个，另外一个不会改变）{copy模块的deep.deepcopy()函数}
+  
+**  Python是如何进行内存管理的:
+   从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制
+一、对象的引用计数机制
+Python内部使用引用计数，来保持追踪内存中的对象，所有对象都有引用计数。
+引用计数增加的情况：
+1，一个对象分配一个新名称
+2，将其放入一个容器中（如列表、元组或字典）
+引用计数减少的情况：
+1，使用del语句对对象别名显示的销毁
+2，引用超出作用域或被重新赋值
+sys.getrefcount( )函数可以获得对象的当前引用计数
+多数情况下，引用计数比你猜测得要大得多。对于不可变数据（如数字和字符串），解释器会在程序的不同部分共享内存，以便节约内存。
+二、垃圾回收
+1，当一个对象的引用计数归零时，它将被垃圾收集机制处理掉。
+2，当两个对象a和b相互引用时，del语句可以减少a和b的引用计数，并销毁用于引用底层对象的名称。然而由于每个对象都包含一个对其他对象的应用，因此引用计数不会归零，对象也不会销毁。（从而导致内存泄露）。为解决这一问题，解释器会定期执行一个循环检测器，搜索不可访问对象的循环并删除它们。
+三、内存池机制
+Python提供了对内存的垃圾收集机制，但是它将不用的内存放到内存池而不是返回给操作系统。
+1，Pymalloc机制。为了加速Python的执行效率，Python引入了一个内存池机制，用于管理对小块内存的申请和释放。
+2，Python中所有小于256个字节的对象都使用pymalloc实现的分配器，而大的对象则使用系统的malloc。
+3，对于Python对象，如整数，浮点数和List，都有其独立的私有内存池，对象间不共享他们的内存池。也就是说如果你分配又释放了大量的整数，用于缓存这些整数的内存就不能再分配给浮点数。  1. 对象的引用计数机制
+* <2018-04-12 四>
+  iniparser  : 
+
+  姓名： 李训辉
+  电话： 18061206258
+  邮箱： 79354628@qq.com
+
+* <2018-04-13 五>
+  面试
+  编写解析并送入二次识别程序代码
+  
+* <2018-04-14 Sat>
+
+  表中没有 hostname 这个字段
+  postgresql中timestamp 可以使用字符串直接插入  ''
+* <2018-04-15 Sun>
+下面是没有的字段
+  | 字段名               | 类型          | 说明                                                                                                                   | 是否ETL导入 |
+  |----------------------+---------------+------------------------------------------------------------------------------------------------------------------------+-------------|
+  | ID                   | bigserial     | R, 自增序列，记录唯一ID                                                                                                |             |
+  | PlatformID           | varchar(32)   | 卡口平台ID，卡口所属的平台                                                                                             |             |
+
+  | CityCode             | varchar(6)    | 城市编码，为了保持和VOCEAN一致                                                                                         |             |
+# 为json中没有
+# | PlateClass           | Varchar(2)    | 号牌种类                                                                                                               | N           |
+# | VehicleColorDepth    | varchar(1)    | 颜色深浅, 0：深 ,1：浅                                                                                                 | N           |
+# | Sunvisor             | varchar(1)    | 遮阳板状态, 0：收起；1：放下                                                                                           | N           |
+# | MainDriverSafetyBelt | varchar(1)    | 主驾， 安全带状态, 0：未系；1：有系                       | N |
+# | CoDriverSafetyBelt   | varchar(1)    | 副驾， 安全带状态, 0：未系；1：有系                       | N |
+# | Suspicious           | varchar(1)    | 是否可疑车, 0：否; 1：是                                  | N |
+# | Danger               | varchar(1)    | 是否危险品车, 0：否; 1：是                                | N |
+# | Crash                | varchar(1)    | 是否碰撞车，0：否; 1：是                                  | N |
+# | Rack                 | varchar(1)    | 行李架，0 ： 无， 1， 有                                  | N |
+# | Sunroof              | varchar(1)    | 天窗，0 ： 无， 1， 有                                    | N |
+# | SpareTire            | varchar(1)    | 备胎，0 ： 无， 1， 有                                    | N |
+# | PlateReliability     | varchar(3)    | 号码识别可信度, 以0~100数值标识百分比，数值越大可信度越高 | N |
+
+出现的问题
+[2018-3-15 9:6:35][ERROR][command failed: ERROR:  value too long for type character varying(3)
+
+深浅拷贝构造函数
+
+* <2018-04-16 Mon>
+  张守忠  4：30
+  贾儒雅  12：30
+* <2018-04-17 Tue>
+  dict_shenmo.hpp : 这里只是需要一个map 配置文件的解析应该放在dict_mgr中
+  面试
+  定义UNISDK接口
+  整理代码
+* <2018-04-18 Wed>
+  18651685096  
+  
+* <2018-04-17 四>
+  面试
+  完成卓视识别出的json文件
+* <2018-04-20 五>
+  对于卓视json字段的处理
+* <2018-04-24 Tue>
+  看病
+* <2018-04-24 Tue>
+  测试好了再提交
+  配合解决kafka延时问题
+* <2018-04-25 Wed>
+  面试
+  对接卓视
+* <2018-04-26 Thu>
+  
+  root: vimicro1234
+  面试
+  卓视程序运行对接
+  编写封装卓视的SDK代码
+  
+* <2018-04-27 Fri>
+  g++ 4.8 和 5.4 区别有些大
+  
+  在shenmo/lib/linux/目录下新建两个连接
+  libopencv_core.so -> libopencv_core.so.2.4
+  libopencv_highgui.so -> libopencv_highgui.so.2.4
+
+  ln -s libopencv_core.so.2.4 libopencv_core.so
+  ln -s libopencv_highgui.so.2.4 libopencv_highgui.so
+  
+* <2018-04-28 Sat>
+  
+  三重指针，需要开一块内存，用来存储指向返回结果指针，返回需要释放指向json结果的指针，同时需要释放指向返回结果的指针吗？
+  json_num应该是一个指针
+
+蓝色
+
+白色
+* <2018-05-02 Wed>
+  字典问题 0024 0026 ==> 应该改为 24 26 
+* <2018-05-04 Fri>
+  data_analyses.cpp :之中的字符串处理可以优化
+  url的处理
+* <2018-05-08 Tue>
+  周1面试
+  git 过滤不能提交的代码
+  merge git 代码
+  比较两个值的是否相同可以使用
+  int x, y;
+  !(x^y)
+  将205 /mnt/big-pic  两个文件夹下的图片跑一下
+  完成kafka到redis的代码
+  基本完成定时调用etl工具程序
+* <2018-05-09 Wed>
+  讨论进程间通信的问题
+  进行进程间的通信redis作为中间键
+  一个任务的开始，需要有任务结束的信号
+* <2018-05-10 Thu>
+  新人的任务分配 
+  
+* <2018-05-11 Fri>  
+* <2018-05-12 Sat>
+  
+* <2018-05-16 Wed>
+  面试 编写和二次管理模块的交互代码
+  面试 完成C++模块-系统运行日志的两个模块代码
+  讨论c中http协议栈，json解析实现库选择，联调代码
+
+* <2018-05-17 Thu>
+  restbed ssl 没有 
+  1. 讲解shenmo的SDK及统一的接口
+  2. 将程序需要的参数改成命令传参
+* <2018-05-21 Mon>
+  1. 所有程序的全部修改为命令行传参数 
+	 ok
+  2. all programs 添加alarm协议
+  3. etl参数启动，读取配置
+	 
+
+  taskcontrols : 
+  kafka: 
+  recog:
+
+  先不思考异常问题
+
+  1. void的类型的函数使用return
+  2. trigger_update_status 和 check_task_status 重复检测
+  3. check_task_status中定义多余变量
+  4. post_method_handler  strresult  docment 有问题 局部变量将上层变量
+
+  整理recog_system_mgr代码
+* <2018-05-22 Tue>
+  wine32安装
+  整理recog_system_mgr代码
+* <2018-05-23 Wed>
+  整理recog_system_mgr代码
+
+  上报的uri 
+* <2018-05-24 Thu>
+  和java对接
+* <2018-05-25 Fri>
+  和java对接
+  std::stringstream stream;
+  stream << i;
+  return stream.str();
+* <2018-05-28 Mon>
+  task
+    1. 面试
+	2. 识别模块添加warn
+	3. 和java之间的心跳包
+    4. 识别模块异常的处理
+    5. 框架的整理
+* <2018-05-29 Tue>
+  内存管理
+  1. redis中图片的数据
+  2. 
+  crontab格式解析
+
+  redis中从redis中得到数据，这里有一份copy
+  
+* <2018-05-31 Thu>
+  5.30   : crontab格式解析
+* <2018-06-01 Fri>
+  1. json代码的修改
+	 
+  2. json封装接口
+	 2.1 接口最好使用引用尤其是需要解析的json文件
+	 2.2 当文件有不少字段时，如几十个字段，需要只解析一次，不能每次得到一个字段就解析一次json文件
+	 
+  3. shenmo封装问题
+	 3.1 note: c 当集成时会名字冲突解决方案
+	 
+* <2018-06-05 Tue>
+  昨天修改recog_system_mgr代码
+  1. 内存处理加进去
+  2. 
+  周三： 封装postgresql c版本的读数据库接口
+  
+* <2018-06-12 Tue>
+  代码行数
+  default: 
+  deque.swap()
+  开会
+
+  10.30.23.203:/home/data on /mnt/data type nfs4 (
+rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,
+namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,
+clientaddr=10.30.23.205,local_lock=none,addr=10.30.23.203)
+
+* <2018-06-14 Thu>
+配合测试，解决问题
+解决卓视识别大量数据的出现错误的问题
+* <2018-06-15 Fri>
+  1. 生成对应的sql文件
+  2. 真实的sql语句     code_feature_int.sql  code_feature_char.sql  
+  3. 还有一个脚本生成假的sql语句
+	 将名字提取出来 
+
+	 配合测试，解决问题
+	 卓视以图搜图的特征库
+* <2018-06-19 Tue>
+  特征库的数据生成
+ 
+  1. 指定log目录有些问题
+     指定目录，在当前文件夹下会生成一个log目录
+  2. log的时间和实际相差1小时
+  3. zhuoshi的log生成目录 
+  4. log目录名 <= 1024字节
+
+* <2018-06-25 Mon>
+  taskcontrols : 
+  control 字段 number ==> string
+
+  ./recog_system_mgr ./log/ 10.30.26.193 6379 10.30.26.187 31532 vsic uam Uam123 10.150.90.87:8080/vehicle-portal 
+  ./recog_system_mgr ./log/ 127.0.0.1 6379 10.30.26.193 5432 vsic uam Uam123 10.150.90.87:8080/vehicle-portal 
+  
+
+  libevent 编译
+  ./configure --disable-shared
+
+
+  如果ip不存在则等到 137秒
+  存在 timeout没有问题
+  解决定时器不准确问题
+* <2018-06-26 Tue>
+  定时器里面一定不能有延时操作 
+  c++深copy 
+  ETL_mng编译时需要设置一个环境变量
+  这个环境变量指向当前的目录
+  
+* <2018-06-27 Wed>
+  定时任务不准确
+* <2018-06-28 Thu>
+  1. 需要shenmo跑一下
+  /home/data/mobile_hard_disk_bak/tmp/Vimicro_vehicle_dataset/scene_pic/zhangjiajie/zhangjiajie/snapshot_tmp_3408
+  2
+  
+* <2018-06-29 Fri>
+  1.熟悉wqz的代码
+* <2018-07-03 Tue>
+  % BEGIN RECEIVE ORGTBL salesfigures
+  % END RECEIVE ORGTBL salesfigures
+  \begin{comment}
+  #+ORGTBL: SEND salesfigures orgtbl-to-latex
+  | Month | Days | Nr sold | per day |
+  |-------+------+---------+---------|
+  | Jan   |   23 |      55 |     2.4 |
+  | Feb   |   21 |      16 |     0.8 |
+  | March |   22 |     278 |    12.6 |
+  #+TBLFM: $4=$3/$2;%.1f
+  % $ (optional extra dollar to keep font-lock happy, see footnote)
+  \end{comment}
+
+  #+BEGIN_SRC emacs-lisp
+       (defun org-xor (a b)
+          "Exclusive or."
+          (if a (not b) b))
+  #+END_SRC
+
+  #+RESULTS:
+  : org-xor
+
+  #+BEGIN_SRC plateuml 
+  @startuml;
+     Bob -[#red]> Alice : hello
+     Alice -[#0000FF]->Bob : ok
+  @enduml
+  #+END_SRC
+
+  #+BEGIN_SRC c++
+  #include <iostream>
+  using namespace std;
+  int main(){
+  cout << "" << endl;
+  return 0;
+  }
+  #+END_SRC
+
+  #+BEGIN_SRC c
+  #include <stdio.h>
+
+  int main(){
+  printf("hello!");
+  return 0;
+  }
+  #+END_SRC
+
+  #+BEGIN_SRC plantuml :file ./test/orgmode-babel-sequenceuml.png
+    Alice -> Bob: synchronous call
+    Alice ->> Bob: asynchronous call
+  #+END_SRC
+
+  #+BEGIN_SRC dot :file ./test-dot.png :var input=make-dot :exports results
+  graph {
+  $input
+  }
+  #+END_SRC
+* <2018-07-06 Fri>
+  
+* <2018-07-09 Mon>
+  当字典中的传入的已经是数字时，不需要转换
+* <2018-07-12 Thu>
+
+  1. 以图搜图
+  2. 卓视视频流
+  3. 识别模块性能 
+
+  平台用户认证ID
+  平台ID
+  
+* <2018-07-13 Fri>
+  
+* <2018-07-16 Mon>
+  1. 7-17 10:30 图片存储 
+  2. 
+
+* <2018-07-18 Wed>
+  昨天 非结构化存储问题
+
+  1. 将feature_code长度修改为可配置
+  2. 将sql语句写入kafka
+ 
+* <2018-07-24 Tue>
+  ./recognize_by_zhuoshi ./log/ 10.30.26.193 6379  10.30.26.193 5432 vsic uam Uam123
+  1. 将识别引擎合在一起
